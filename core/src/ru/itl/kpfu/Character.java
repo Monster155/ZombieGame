@@ -10,77 +10,62 @@ import com.badlogic.gdx.math.Vector2;
 public class Character {
 
     public int lives;
-    public Vector2 position = new Vector2(0,0);;
+    public Vector2 position = new Vector2(Gdx.graphics.getWidth()/2,Gdx.graphics.getHeight()/2);;
     TextureAtlas.AtlasRegion region;
     TextureAtlas atlas;
     public AssetManager assetManager;
 
-    public void Character(){}
-
-    public void update(float delta) {
-        boolean left = Gdx.input.isKeyPressed(Input.Keys.A);
-        boolean right = Gdx.input.isKeyPressed(Input.Keys.D);
-        boolean up = Gdx.input.isKeyPressed(Input.Keys.W);
-        boolean down = Gdx.input.isKeyPressed(Input.Keys.S);
-        if (left && down && !up && !right) {
-            move(delta, 1);
-        } else if (down && !left && !up && !right) {
-            move(delta, 2);
-        } else if (right && down && !up && !left) {
-            move(delta, 3);
-        } else if (left && !right && !up && !down) {
-            move(delta, 4);
-        } else if (right && !left && !up && !down) {
-            move(delta, 6);
-        } else if (left && up && !right && !down) {
-            move(delta, 7);
-        } else if (up && !left && !right && !down) {
-            move(delta, 8);
-        } else if (right && up && !left && !down) {
-            move(delta, 9);
-        }
-    }
-
-    private void move(float delta, int state) {
-        switch (state) {
-            case 1:
-                position.x -= delta * Constants.C_SPEED / Math.sqrt(2);
-                position.y -= delta * Constants.C_SPEED / Math.sqrt(2);
-                break;
-            case 2:
-                position.y -= delta * Constants.C_SPEED;
-                break;
-            case 3:
-                position.x += delta * Constants.C_SPEED / Math.sqrt(2);
-                position.y -= delta * Constants.C_SPEED / Math.sqrt(2);
-                break;
-            case 4:
-                position.x -= delta * Constants.C_SPEED;
-                break;
-            case 6:
-                position.x += delta * Constants.C_SPEED;
-                break;
-            case 7:
-                position.x -= delta * Constants.C_SPEED / Math.sqrt(2);
-                position.y += delta * Constants.C_SPEED / Math.sqrt(2);
-                break;
-            case 8:
-                position.y += delta * Constants.C_SPEED;
-                break;
-            case 9:
-                position.x += delta * Constants.C_SPEED / Math.sqrt(2);
-                position.y += delta * Constants.C_SPEED / Math.sqrt(2);
-                Gdx.app.log("Position", "X:"+position.x+" Y:"+position.y);
-                break;
-        }
-    }
-
-    public void render(SpriteBatch batch) {
+    public Character(){
         assetManager = new AssetManager();
         assetManager.load(Constants.C_ATLAS, TextureAtlas.class);
         assetManager.finishLoading();
         atlas = assetManager.get(Constants.C_ATLAS);
         region = atlas.findRegion(Constants.C_TEXTURE);
+    }
+
+    public void update(float delta) {
+        float w = Gdx.graphics.getWidth(), h = Gdx.graphics.getHeight();
+        boolean left = Gdx.input.isKeyPressed(Input.Keys.A);
+        boolean right = Gdx.input.isKeyPressed(Input.Keys.D);
+        boolean up = Gdx.input.isKeyPressed(Input.Keys.W);
+        boolean down = Gdx.input.isKeyPressed(Input.Keys.S);
+        if (left && down && !up && !right) {
+            if(!(position.x-delta * Constants.C_SPEED / Math.sqrt(2) < 0))
+                position.x -= delta * Constants.C_SPEED / Math.sqrt(2);
+            if(!(position.y-delta * Constants.C_SPEED / Math.sqrt(2) < 0))
+                position.y -= delta * Constants.C_SPEED / Math.sqrt(2);
+        } else if (down && !left && !up && !right) {
+            if(!(position.y-delta * Constants.C_SPEED < 0))
+                position.y -= delta * Constants.C_SPEED;
+        } else if (right && down && !up && !left) {
+            if(!(position.x+Constants.C_SIZE.x+delta * Constants.C_SPEED / Math.sqrt(2) > w))
+                position.x += delta * Constants.C_SPEED / Math.sqrt(2);
+            if(!(position.y-delta * Constants.C_SPEED / Math.sqrt(2) < 0))
+                position.y -= delta * Constants.C_SPEED / Math.sqrt(2);
+        } else if (left && !right && !up && !down) {
+            if(!(position.x-delta * Constants.C_SPEED < 0))
+                position.x -= delta * Constants.C_SPEED;
+        } else if (right && !left && !up && !down) {
+            if(!(position.x+Constants.C_SIZE.x+delta * Constants.C_SPEED > w))
+                position.x += delta * Constants.C_SPEED;
+        } else if (left && up && !right && !down) {
+            if (!(position.x - delta * Constants.C_SPEED / Math.sqrt(2) < 0))
+                position.x -= delta * Constants.C_SPEED / Math.sqrt(2);
+            if(!(position.y + Constants.C_SIZE.y + delta * Constants.C_SPEED / Math.sqrt(2) > h))
+                position.y += delta * Constants.C_SPEED / Math.sqrt(2);
+        } else if (up && !left && !right && !down) {
+            if(!(position.y+Constants.C_SIZE.y+delta * Constants.C_SPEED > h))
+                position.y += delta * Constants.C_SPEED;
+        } else if (right && up && !left && !down) {
+            if(!(position.x+Constants.C_SIZE.x+delta * Constants.C_SPEED / Math.sqrt(2) > w))
+                position.x += delta * Constants.C_SPEED / Math.sqrt(2);
+            if(!(position.y+Constants.C_SIZE.y+delta * Constants.C_SPEED / Math.sqrt(2) > h))
+                position.y += delta * Constants.C_SPEED / Math.sqrt(2);
+        }
+        //Gdx.app.log("Position", "X:"+position.x+" Y:"+position.y);
+    }
+
+    public void render(SpriteBatch batch) {
         batch.draw(
                 region.getTexture(),
                 position.x,

@@ -1,10 +1,13 @@
 package ru.itl.kpfu;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.math.Vector2;
 
 public class Constants {
-    public static final float WORLD_SIZE = 100.0f;
-    public static final float C_SPEED = WORLD_SIZE;
+    public static final Vector2 C_SIZE = new Vector2(31, 35);
+    public static final Texture BACKGROUND = new Texture("D:\\AndroidStudioProjects\\ZombieGame\\android\\assets\\badlogic.jpg");
+    public static final float C_SPEED = 100f;
     public static final int C_MAX_LIVES = 100;
     public static final float C_SHOOT_RATE = 20;
     public static final String C_TEXTURE = "standing-right";
